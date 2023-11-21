@@ -115,31 +115,34 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        if not args:
-            raise SyntaxError
-        splargs = args.split(" ")
-        param = {}
-        new_instance = HBNBCommand.classes[splargs[0]]()
-        if len(splargs) > 1:
-            for i in range(1, len(splargs)):
-                if len(splargs[i].split("=")) == 2:
-                    key = splargs[i].split("=")[0]
-                    val = splargs[i].split("=")[1].replace("_", " ")
-                    val = val.strip('"')
-                    if val.isnumeric():
-                        val = int(val)
-                    else:
-                        try:
-                            float(val)
-                        except Exception:
-                            pass
-                    param[key] = val
-        storage = exec(f"{splargs[0]}()")
-        for key, values in param.items():
-            setattr(storage, key, values)
-        storage.save()
-        print(new_instance.id)
-        storage.save()
+        try:
+            if not args:
+                raise SyntaxError
+            splargs = agrs.split(" ")
+            param = {}
+            if len(splargs) > 1:
+                for i in range(1, len(splargs)):
+                    if len(splargs[i].split("=")) == 2:
+                        key = splargs[i].split("=")[0]
+                        val = splargs[i].split("=")[1].replace("_", " ")
+                        val = val.strip('"')
+                        if val.isnumeric():
+                            val = int(val)
+                        else:
+                            try:
+                                float(val)
+                            except Exception:
+                                pass
+                        param[key] = value
+            my_object = eval(f"{splargs[0]}()")
+            for key, values in param.items():
+                setatr(my_object, key, values)
+            my_object.save()
+            print(f"{my_object.id}")
+        except SyntaxError:
+            pass
+        except NameError:
+            pass
 
     def help_create(self):
         """ Help information for the create method """
