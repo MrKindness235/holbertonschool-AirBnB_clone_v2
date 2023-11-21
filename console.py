@@ -2,7 +2,6 @@
 """ Console Module """
 import cmd
 import sys
-import shlex
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -12,8 +11,6 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 
-classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
 
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
@@ -118,34 +115,16 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        try:
-            if not args:
-                raise SyntaxError
-            lis = args.split(" ")
-            param = {}
-            if len(lis) > 1:
-                for i in range(1, len(lis)):
-                    if len(lis[i].split("=")) == 2:
-                        key = lis[i].split("=")[0]
-                        val = lis[i].split("=")[1].replace("_", " ")
-                        val = val.strip('"')
-                        if val.isnumeric():
-                            val = int(val)
-                        else:
-                            try:
-                                float(val)
-                            except Exception:
-                                pass
-                        param[key] = value
-            my_object = eval(f"{lis[0]}()")
-            for key, val in param.items():
-                setattr(my_object, key, val)
-            my_object.save()
-            print(f"{my_object.id}")
-        except SyntaxError:
-            pass
-        except NameError:
-            pass
+        if not args:
+            print("** class name missing **")
+            return
+        elif args not in HBNBCommand.classes:
+            print("** class doesn't exist **")
+            return
+        new_instance = HBNBCommand.classes[args]()
+        storage.save()
+        print(new_instance.id)
+        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -220,20 +199,21 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
-        my_lis = shlex.split(args)
-        obj_list = []
-        if len(my_lis) == 0:
-            obj_dict = storage.all()
-        elif my_lis[0] in classes:
-            obj_dict = storage.all((classes[a[0]]))
+        print_list = []
+
+        if args:
+            args = args.split(' ')[0]  # remove possible trailing args
+            if args not in HBNBCommand.classes:
+                print("** class doesn't exist **")
+                return
+            for k, v in storage._FileStorage__objects.items():
+                if k.split('.')[0] == args:
+                    print_list.append(str(v))
         else:
-            print("** class doesn't exist **")
-            return False
-        for i in obj_dict:
-            obj_list.append(str(obj_dict[i]))
-        print("[", end="")
-        print(", ".join(obj_list), end="")
-        print("]")
+            for k, v in storage._FileStorage__objects.items():
+                print_list.append(str(v))
+
+        print(print_list)
 
     def help_all(self):
         """ Help information for the all command """
