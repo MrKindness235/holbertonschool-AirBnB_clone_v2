@@ -118,7 +118,7 @@ class HBNBCommand(cmd.Cmd):
         try:
             if not args:
                 raise SyntaxError
-            splargs = agrs.split(" ")
+            splargs = args.split(" ")
             param = {}
             if len(splargs) > 1:
                 for i in range(1, len(splargs)):
