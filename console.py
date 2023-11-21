@@ -118,8 +118,8 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             raise SyntaxError
         splargs = args.split(" ")
-        new_instance = HBNBCommand.classes[splargs[0]]()
         param = {}
+        new_instance = HBNBCommand.classes[splargs[0]]()
         if len(splargs) > 1:
             for i in range(1, len(splargs)):
                 if len(splargs[i].split("=")) == 2:
@@ -134,11 +134,11 @@ class HBNBCommand(cmd.Cmd):
                         except Exception:
                             pass
                     param[key] = val
-        storage = eval(f"{splargs[0]}()")
+        new_instance = eval(f"{splargs[0]}()")
         for key, values in param.items():
-            setattr(storage, key, values)
+            setattr(new_instance, key, values)
         print(new_instance.id)
-        storage.save()
+        new_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
