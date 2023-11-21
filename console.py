@@ -120,21 +120,20 @@ class HBNBCommand(cmd.Cmd):
                 raise SyntaxError
             lis = args.split(" ")
             param = {}
-            if lis[1] not in HBNBCommand.classes:
-                raise SyntaxError
-            for i in range(2, len(lis)):
-                if len(lis[i].split("=")) == 2:
-                    key = lis[i].split("=")[0]
-                    val = lis[i].split("=")[1].replace("_", " ")
-                    val = val.strip('"')
-                    if val.isnumeric():
-                        val = int(val)
-                    else:
-                        try:
-                            float(val)
-                        except Exception:
-                            pass
-                    param[key] = value
+            if len(lis) > 1:
+                for i in range(1, len(lis)):
+                    if len(lis[i].split("=")) == 2:
+                        key = lis[i].split("=")[0]
+                        val = lis[i].split("=")[1].replace("_", " ")
+                        val = val.strip('"')
+                        if val.isnumeric():
+                            val = int(val)
+                        else:
+                            try:
+                                float(val)
+                            except Exception:
+                                pass
+                        param[key] = value
             my_object = eval(f"{lis[0]}()")
             for key, val in param.items():
                 setattr(my_object, key, val)
