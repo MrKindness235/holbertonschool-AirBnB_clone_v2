@@ -56,7 +56,7 @@ class FileStorage:
 
     def delete(self, obj=None):
         """Deletes the passed obj"""
-        if obj is None:
-            raise SyntaxError
-        else:
-            del FileStorage.__objects[obj.to_dict()['__class__'] + '.' + obj.id]
+        if obj:
+            class_name = obj.to_dict()['__class__']
+            key = f"{class_name}.{obj.id}"
+            del FileStorage.__objects[key]
