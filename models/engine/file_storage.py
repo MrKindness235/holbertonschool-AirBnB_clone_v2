@@ -56,7 +56,6 @@ class FileStorage:
 
     def delete(self, obj=None):
         """Deletes the passed obj"""
-        replacer = {}
         if obj is None:
             raise SyntaxError
         else:
