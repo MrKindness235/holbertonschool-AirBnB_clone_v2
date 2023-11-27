@@ -22,7 +22,7 @@ class DBStorage():
 
     def __init__(self):
         """__init__"""
-        if getenv('HBNB_ENV') is not 'test':
+        if getenv('HBNB_ENV') != 'test':
             self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
                                           format(getenv('HBNB_MYSQL_USER'),
                                                  getenv('HBNB_MYSQL_PWD'),
