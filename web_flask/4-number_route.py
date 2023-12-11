@@ -37,7 +37,7 @@ def print_python(text='is cool'):
     return "Python {}".format(escape(text).replace('_', ' '))
 
 
-@app.route("/python/<int:n>", strict_slashes=False)
+@app.route("/number/<int:n>", strict_slashes=False)
 def print_number(n):
     """Function that displays:"""
     return "{} is a number".format(n)
