@@ -2,7 +2,7 @@
 """
 This is a major update to 0.
 It also displays hbnb.
-Added 
+Added print_C function.
 Both listen to 0.0.0.0, port 5000.
 """
 
