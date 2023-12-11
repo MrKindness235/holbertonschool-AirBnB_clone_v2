@@ -2,7 +2,8 @@
 """
 This is a major update to 0.
 It also displays hbnb.
-Both listen to 0.0.0.0, port 5000
+Added 
+Both listen to 0.0.0.0, port 5000.
 """
 
 from flask import Flask
@@ -24,7 +25,7 @@ def print_hbnb():
 
 
 @app.route("/c/<text>", strict_slashes=False)
-def print_hbnb(text):
+def print_C(text):
     """Function that displays:"""
     return "C {}".format(escape(text).replace('_', ' '))
 
