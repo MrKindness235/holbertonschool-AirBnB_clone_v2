@@ -31,7 +31,7 @@ def print_C(text):
 
 
 @app.route("/python/<text>", strict_slashes=False)
-def print_python(text):
+def print_python(text='is cool'):
     """Function that displays:"""
     return "Python {}".format(escape(text).replace('_', ' '))
 
