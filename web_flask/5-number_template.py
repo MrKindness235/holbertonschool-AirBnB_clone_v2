@@ -45,13 +45,13 @@ def print_python(text='is cool'):
 
 @app.route("/number/<int:n>", strict_slashes=False)
 def print_number(n):
-    """Function that displays only if n is an integer."""
+    """Function that displays 'n is a number', only if n is an integer."""
     return "{} is a number".format(n)
 
 
 @app.route("/number_template/<int:n>", strict_slashes=False)
-def print_number(n):
-    """Function that renders only if n is an integer."""
+def print_template5(n):
+    """Function that renders 5-number.html only if n is an integer."""
     return render_template('5-number.html', n=n)
 
 
