@@ -43,14 +43,15 @@ def print_python(text='is cool'):
 
 @app.route("/number/<int:n>", strict_slashes=False)
 def print_number(n):
-    """Function that displays:"""
+    """Function that displays only if n is an integer:"""
     return "{} is a number".format(n)
 
 
 @app.route("/number_template/<int:n>", strict_slashes=False)
 def print_number(n):
-    """Function that displays:"""
+    """Function that renders 5-number.html only if n is an integer:"""
     return render_template('5-number.html', n=n)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
