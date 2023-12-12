@@ -4,11 +4,13 @@ This is a major update to 0.
 It also displays hbnb.
 Added print_C function.
 Added the print_python function.
+Added the print_number function; this one is interesting
+since it has an "only if int" condition.
 Both listen to 0.0.0.0, port 5000.
 """
 
-
 from flask import Flask
+from flask import render_template
 from markupsafe import escape
 
 app = Flask(__name__)
@@ -37,6 +39,18 @@ def print_C(text):
 def print_python(text='is cool'):
     """Function that displays:"""
     return "Python {}".format(escape(text).replace('_', ' '))
+
+
+@app.route("/number/<int:n>", strict_slashes=False)
+def print_number(n):
+    """Function that displays:"""
+    return "{} is a number".format(n)
+
+
+@app.route("/number_template/<int:n>", strict_slashes=False)
+def print_number(n):
+    """Function that displays:"""
+    return render_template('5-number.html', n=n)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

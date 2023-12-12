@@ -3,6 +3,9 @@
 This is a major update to 0.
 It also displays hbnb.
 Added print_C function.
+Added the print_python function.
+Added the print_number function; this one is interesting
+since it has an "only if int" condition.
 Both listen to 0.0.0.0, port 5000.
 """
 
