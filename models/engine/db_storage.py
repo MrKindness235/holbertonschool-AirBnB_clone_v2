@@ -32,18 +32,17 @@ class DBStorage():
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """Returns the specified cls (All if cls is None)"""
-        dic = {}
         if cls is None:
-            for i in dict_class.values():
-                for j in self.__session.query(i).all():
-                    key = type(j).__name__ + "." + j.id
-                    dic[key] = j
+            data = self.__session.query().all()
         else:
-            for j in self.__session.query(cls).all():
-                key = type(j).__name__ + "." + j.id
-                dic[key] = j
-        return dic
+            data = self.__session.query(cls).all()
+
+        obj_dict = {}
+        for obj in data:
+            obj_dict[f'{obj.__class__.__name__}.{obj.id}'] = obj
+
+        return obj_dict
+
 
     def new(self, obj):
         """The way to add a new object"""
