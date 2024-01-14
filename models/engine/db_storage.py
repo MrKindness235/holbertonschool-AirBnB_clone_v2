@@ -1,70 +1,79 @@
 #!/usr/bin/python3
-"""
-    File to manage storage using implementations from SQL
-"""
-from models.city import City
-from models.place import Place
-from models.amenity import Amenity
-from models.review import Review
-from models.state import State
+"""comment"""
+from models.base_model import BaseModel, Base
 from models.user import User
-from models.base_model import Base, BaseModel
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from os import getenv
 
 
-class DBStorage():
-    """Class definition and attributes"""
+class DBStorage:
+    """db storage """
     __engine = None
     __session = None
 
     def __init__(self):
-        """__init__"""
-
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
-                format(getenv('HBNB_MYSQL_USER'),
-                        getenv('HBNB_MYSQL_PWD'),
-                        getenv('HBNB_MYSQL_HOST'),
-                        getenv('HBNB_MYSQL_DB')),
-                        pool_pre_ping=True)
-        if getenv('HBNB_ENV') == 'test':
+        """Constructor. Set up the DB connection"""
+        user = getenv('HBNB_MYSQL_USER')
+        pwd = getenv('HBNB_MYSQL_PWD')
+        host = getenv('HBNB_MYSQL_HOST')
+        db = getenv('HBNB_MYSQL_DB')
+        self.__engine = create_engine(
+            f'mysql+mysqldb://{user}:{pwd}@{host}/{db}',
+            pool_pre_ping=True)
+        if getenv("HBNB_ENV") == "test":
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
+        """Query on the current database session,
+        get all objects stored in the database for a specific
+        class or for all classes"""
+
+        directory = {}
+        classes = [State, City, User, Place, Review, Amenity]
+
         if cls is None:
-            data = self.__session.query().all()
+            for cls in classes:
+                objects = self.__session.query(cls).all()
+                for obj in objects:
+                    key = f'{obj.__class__.__name__}.{obj.id}'
+                    directory[key] = obj
+            return directory
+        elif cls in classes:
+            objects = self.__session.query(cls).all()
+            for obj in objects:
+                key = f'{obj.__class__.__name__}.{obj.id}'
+                directory[key] = obj
+            return directory
         else:
-            data = self.__session.query(cls).all()
-
-        obj_dict = {}
-        for obj in data:
-            obj_dict[f'{obj.__class__.__name__}.{obj.id}'] = obj
-
-        return obj_dict
-
+            return {}
 
     def new(self, obj):
-        """The way to add a new object"""
-        self.__session.add(obj)
+        """add the object to the current database session"""
+        if obj:
+            self.__session.add(obj)
 
     def save(self):
-        """Saves the changes of the files"""
+        """commit all changes of the current database session"""
         self.__session.commit()
 
     def delete(self, obj=None):
-        """Deletes the specified object"""
+        """delete from the current database session obj if not None"""
         if obj is not None:
             self.__session.delete(obj)
 
     def reload(self):
-        """Creates all the tables in the database"""
+        """Create all tables in the database"""
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine,
-                                       expire_on_commit=False)
-        Session = scoped_session(session_factory)
+        my_session = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(my_session)
         self.__session = Session()
 
     def close(self):
-        """Closes the session"""
+        """Close the session"""
         self.__session.close()
