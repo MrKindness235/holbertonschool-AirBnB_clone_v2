@@ -9,25 +9,23 @@ sorted by name (A->Z) tip
 LI tag: description of one State: <state.id>: <B><state.name></B>
 """
 
-from flask import Flask, render_template
+from flask import Flask
+from flask import render_template
 from models import storage
 from models.state import State
-
 
 app = Flask(__name__)
 
 
-@app.route('/states_list', strict_slashes=False)
-def states_list():
-    """ a web page with a list of state objects """
-    states = storage.all(State)
-
-    return render_template('7-states_list.html', states=states)
+@app.route("/states_list", strict_slashes=False)
+def show_states():
+    """ displays a HTML page with the list of all State objects in the DB"""
+    return render_template('7-states_list.html', states=storage.all(State))
 
 
 @app.teardown_appcontext
-def tear_down(e):
-    """ close the actual session """
+def teardown(response_or_exc):
+    """ removes the current SQLAlchemy Session"""
     storage.close()
 
 
